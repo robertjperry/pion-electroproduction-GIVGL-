@@ -22,7 +22,6 @@ if fit_data==True:
     for ii in range(nsets):
         qs=-data[0][ii*ndata]
         Qs.append(-qs)
-        #qs_correct=-data[2][ii*ndata:(ii+1)*ndata]
         s=data[1][ii*ndata]**2
         t=-data[4][ii*ndata:(ii+1)*ndata]
 
@@ -40,7 +39,10 @@ if fit_data==True:
 
         fpi_buf=[]
         g1_buf=[]
+        # Fitting data
         for boot in boots:
+            # Model has 2 free parameters, Fpi and g1.
+            # They are passed as an array [Fpi, g1]
             fit=opt.curve_fit(lambda t_,fpi_,g1_: ds.dsLdt(s,t_,qs,[fpi_,g1_]),t[1:],boot[1:],sigma=boots.std(0)[1:])
             fpi_buf.append(fit[0][0])
             g1_buf.append(fit[0][1])
@@ -70,7 +72,6 @@ Qs=[]
 for ii in range(nsets):
     qs=-data[0][ii*ndata]
     Qs.append(-qs)
-    #qs_correct=-data[2][ii*ndata:(ii+1)*ndata]
     s=data[1][ii*ndata]**2
     t=-data[4][ii*ndata:(ii+1)*ndata]
     
@@ -90,8 +91,10 @@ for ii in range(nsets):
     print lam
     
     t_hd=np.linspace(min(t),max(t))
+    
+    # Predictions for cross sections
     fig,ax=plt.subplots(1,1)
-    ax.plot(-t_hd,np.real(ds.dsLdt(s,t_hd,qs,lam)))
+    ax.plot(-t_hd,ds.dsLdt(s,t_hd,qs,lam))
     ax.errorbar(-t,dL,yerr=dL_err,marker='.',ls='')
     ax.errorbar(-t,boots.mean(0),yerr=boots.std(0),marker='x',ls='')
     ax.set_xlabel('$-t$ (GeV$^2$)')
@@ -99,29 +102,28 @@ for ii in range(nsets):
     fig.tight_layout()
     
     fig,ax=plt.subplots(1,1)
-    ax.plot(-t_hd,np.real(ds.dsTdt(s,t_hd,qs,lam)))
+    ax.plot(-t_hd,ds.dsTdt(s,t_hd,qs,lam))
     ax.errorbar(-t,dT,yerr=dT_err,marker='.',ls='')
     ax.set_xlabel('$-t$ (GeV$^2$)')
     ax.set_ylabel(r'$d\sigma_\text{T}/dt$')
     fig.tight_layout()
     
     fig,ax=plt.subplots(1,1)
-    ax.plot(-t_hd,np.real(ds.dsTTdt(s,t_hd,qs,lam)))
+    ax.plot(-t_hd,ds.dsTTdt(s,t_hd,qs,lam))
     ax.errorbar(-t,dTT,yerr=dTT_err,marker='.',ls='')
     ax.set_xlabel('$-t$ (GeV$^2$)')
     ax.set_ylabel(r'$d\sigma_\text{TT}/dt$')
     fig.tight_layout()
     
     fig,ax=plt.subplots(1,1)
-    ax.plot(-t_hd,np.real(ds.dsLTdt(s,t_hd,qs,lam)))
+    ax.plot(-t_hd,ds.dsLTdt(s,t_hd,qs,lam))
     ax.errorbar(-t,dLT,yerr=dLT_err,marker='.',ls='')
     ax.set_xlabel('$-t$ (GeV$^2$)')
     ax.set_ylabel(r'$d\sigma_\text{LT}/dt$')
     fig.tight_layout()
 
-#print Qs
-#print Fpi.shape
-    
+
+# Plotting resulting extracted values for Fpi
 Qs_hd=np.linspace(0,3)
 fig,ax=plt.subplots(1,1)
 fm2GeV=1/0.197 # GeV^-1

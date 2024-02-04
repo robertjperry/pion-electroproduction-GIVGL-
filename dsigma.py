@@ -28,22 +28,22 @@ def fpi(t,lam):
 def dsLdt(s,t,qs,lam):
     norm=pm.gev2mb*pm.alpha/4.0/((s-pm.mn**2)*np.sqrt(kallen(s,qs,pm.mn**2)))
     amps=amp(s,t,qs,0,0,lam)
-    return norm*amps
+    return norm*np.real(amps)
 
 def dsTdt(s,t,qs,lam):
     norm=pm.gev2mb*pm.alpha/4.0/((s-pm.mn**2)*np.sqrt(kallen(s,qs,pm.mn**2)))
     amps=(amp(s,t,qs,-1,-1,lam)+amp(s,t,qs,1,1,lam))/2.0
-    return norm*amps
+    return norm*np.real(amps)
 
 def dsTTdt(s,t,qs,lam):
     norm=pm.gev2mb*pm.alpha/4.0/((s-pm.mn**2)*np.sqrt(kallen(s,qs,pm.mn**2)))
     amps=-(amp(s,t,qs,-1,1,lam)+amp(s,t,qs,1,-1,lam))/2.0
-    return norm*amps
+    return norm*np.real(amps)
 
 def dsLTdt(s,t,qs,lam):
     norm=pm.gev2mb*pm.alpha/4.0/((s-pm.mn**2)*np.sqrt(kallen(s,qs,pm.mn**2)))
     amps=-(-amp(s,t,qs,0,-1,lam)-amp(s,t,qs,-1,0,lam)+amp(s,t,qs,0,1,lam)+amp(s,t,qs,1,0,lam))/(2.0*np.sqrt(2.0))
-    return norm*amps
+    return norm*np.real(amps)
 
 
 def get_eps(q,lam):
